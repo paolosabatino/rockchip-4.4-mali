@@ -1,7 +1,4 @@
-# Mali support for Allwinner / sunXi platform for mainline Linux
-
-Here is the driver needed in order to support ARM's Mali GPU found on the Allwinner
-SoC, using a mainline (ie. Torvalds') kernel.
+# Mali support for Rockchip platform for customized Linux 4.4
 
 ## Adding the Mali to your Device Tree
 
@@ -19,7 +16,7 @@ enabled in your kernel configuration.
 Then, you can compile the module using the following commands:
 
 ```
-git clone https://github.com/mripard/sunxi-mali.git
+git clone https://github.com/paolosabatino/sunxi-mali
 cd sunxi-mali
 export CROSS_COMPILE=$TOOLCHAIN_PREFIX
 export KDIR=$KERNEL_BUILD_DIR
