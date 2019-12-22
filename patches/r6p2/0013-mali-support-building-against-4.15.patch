@@ -92,7 +92,7 @@ Signed-off-by: John Stultz <john.stultz@linaro.org>
 -struct _mali_osk_timer_t_struct {
 -	struct timer_list timer;
 -};
-+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 14, 0)
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 4, 0)
 +
 +#define TIMER_DATA_TYPE		unsigned long
 +#define TIMER_FUNC_TYPE		void (*)(TIMER_DATA_TYPE)
