@@ -21,8 +21,6 @@ cd rockchip-4.4-mali
 export CROSS_COMPILE=$TOOLCHAIN_PREFIX
 export KDIR=$KERNEL_BUILD_DIR
 export INSTALL_MOD_PATH=$TARGET_DIR
-export TARGET_PLATFORM=linux
-export MALI_PLATFORM=arm
 export ARCH=arm
 ./build.sh -r r6p2 -b
 ./build.sh -r r6p2 -i
