@@ -5,7 +5,8 @@ JOBS=$(nproc)
 BUILD_OPTS="USING_UMP=0
 	    BUILD=release
 	    USING_PROFILING=0
-	    MALI_PLATFORM=sunxi
+	    TARGET_PLATFORM=linux
+	    MALI_PLATFORM=arm
 	    USING_DVFS=1
 	    USING_DEVFREQ=1"
 
