@@ -17,16 +17,31 @@ Then, you can compile the module using the following commands:
 
 ```
 git clone https://github.com/paolosabatino/sunxi-mali
-cd sunxi-mali
+cd rockchip-4.4-mali
 export CROSS_COMPILE=$TOOLCHAIN_PREFIX
 export KDIR=$KERNEL_BUILD_DIR
 export INSTALL_MOD_PATH=$TARGET_DIR
+export TARGET_PLATFORM=linux
+export MALI_PLATFORM=arm
+export ARCH=arm
 ./build.sh -r r6p2 -b
 ./build.sh -r r6p2 -i
 ```
 
 It should install the mali.ko Linux kernel module into the target filesystem,
 and the module should be loaded automatically. If it isn't, modprobe will help.
+
+or if you prefer to compile the mali.ko module manually:
+```
+git clone https://github.com/paolosabatino/sunxi-mali
+cd rockchip-4.4-mali
+export CROSS_COMPILE=$TOOLCHAIN_PREFIX
+export KDIR=$KERNEL_BUILD_DIR
+export ARCH=arm
+./build.sh -r r6p2 -a
+cd r6p2/src/devicedrv/mali/
+TARGET_PLATFORM=linux MALI_PLATFORM=arm JOBS=2 make
+```
 
 To compile for arm64(aarch64) platform, before issuing ./build.sh :
 
