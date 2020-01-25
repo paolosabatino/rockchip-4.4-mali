@@ -16,7 +16,7 @@ enabled in your kernel configuration.
 Then, you can compile the module using the following commands:
 
 ```
-git clone https://github.com/paolosabatino/sunxi-mali
+git clone https://github.com/paolosabatino/rockchip-4.4-mali
 cd rockchip-4.4-mali
 export CROSS_COMPILE=$TOOLCHAIN_PREFIX
 export KDIR=$KERNEL_BUILD_DIR
@@ -31,7 +31,7 @@ and the module should be loaded automatically. If it isn't, modprobe will help.
 
 or if you prefer to compile the mali.ko module manually:
 ```
-git clone https://github.com/paolosabatino/sunxi-mali
+git clone https://github.com/paolosabatino/rockchip-4.4-mali
 cd rockchip-4.4-mali
 export CROSS_COMPILE=$TOOLCHAIN_PREFIX
 export KDIR=$KERNEL_BUILD_DIR
