@@ -1,88 +1,34 @@
-# Mali support for Rockchip platform for customized Linux 4.4
-
-## Adding the Mali to your Device Tree
-
-If that isn't already the case, you'll need to edit your Device Tree file to
-add a node following the [Device Tree binding](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt)
-
-Don't forget to submit your change afterward to the Linux kernel mailing list..
-
-## Building the kernel module
-
-In order to build the kernel module, you'll need a functional DRM driver. If
-you have that already, you'll need the options `CONFIG_CMA` and `CONFIG_DMA_CMA`
-enabled in your kernel configuration.
-
-Then, you can compile the module using the following commands:
+Mali r7p0 kernel driver for Rockchip 
+===============================================
 
 ```
-git clone https://github.com/paolosabatino/rockchip-4.4-mali
-cd rockchip-4.4-mali
-export CROSS_COMPILE=$TOOLCHAIN_PREFIX
-export KDIR=$KERNEL_BUILD_DIR
-export INSTALL_MOD_PATH=$TARGET_DIR
 export ARCH=arm
-./build.sh -r r6p2 -b
-./build.sh -r r6p2 -i
+export CROSS_COMPILE=arm-linux-gnueabihf-
+export KDIR=/lib/modules/$(uname -r)/build
+./build.sh
 ```
 
-It should install the mali.ko Linux kernel module into the target filesystem,
-and the module should be loaded automatically. If it isn't, modprobe will help.
-
-or if you prefer to compile the mali.ko module manually:
-```
-git clone https://github.com/paolosabatino/rockchip-4.4-mali
-cd rockchip-4.4-mali
-export CROSS_COMPILE=$TOOLCHAIN_PREFIX
-export KDIR=$KERNEL_BUILD_DIR
-export ARCH=arm
-./build.sh -r r6p2 -a
-cd r6p2/src/devicedrv/mali/
-TARGET_PLATFORM=linux MALI_PLATFORM=arm JOBS=2 make
-```
-
-To compile for arm64(aarch64) platform, before issuing ./build.sh :
+Copy mali.ko to /lib/modules into your kernel modules directory, then
 
 ```
-export ARCH=arm64
+depmod -a
+modprobe mali
 ```
 
-Module is compiled using parallel build by default.
-To override jobs number, use -j option as follows:
+Then you should be able to use rockchip r7p0 userland mali libraries you can find here:
 
+https://github.com/rockchip-linux/libmali
+
+Mali libraries should have the following symlinks :
 ```
-./build.sh -r r6p2 -j 8 -b
+libEGL.so -> libEGL.so.1
+libEGL.so.1 -> libEGL.so.1.4
+libEGL.so.1.4 -> libMali.so
+libGLESv1_CM.so -> libGLESv1_CM.so.1
+libGLESv1_CM.so.1 -> libGLESv1_CM.so.1.1
+libGLESv1_CM.so.1.1 -> libMali.so
+libGLESv2.so -> libGLESv2.so.2
+libGLESv2.so.2 -> libGLESv2.so.2.0
+libGLESv2.so.2.0 -> libMali.so
+libMali.so
 ```
-Where 8 is the number of simultaneous jobs.
-
-## Installing the user-space components
-
-Once the driver is compiled and loaded, you'll need to integrate the OpenGL ES
-implementation.
-
-In order to do that, you'll need to do the following commands (assuming you
-want the r6p2 fbdev version over the X11-dma-buf one).
-
-```
-git clone https://github.com/bootlin/mali-blobs.git
-cd mali-blobs
-cp -a r6p2/arm/fbdev/lib* $TARGET_DIR/usr/lib
-```
-
-## fbdev quirks
-
-The fbdev variants are meant to deal with applications using the legacy fbdev
-interface. The most widely used example would be [Qt](https://www.qt.io/). In
-such a case, you'll need to do a few more things in order to have a working
-setup.
-
-The Mali blob uses framebuffer panning to implement multiple buffering.
-Therefore, the kernel needs to allocate buffers at least twice the size (for
-double buffering) of the actual resolution, which it doesn't by default. For
-you to change that, you'll need to change either the
-`CONFIG_DRM_FBDEV_OVERALLOC` option or the `drm_kms_helper.drm_fbdev_overalloc`
-parameter to 100 times the number of simultaneous buffers you want to use (so
-200 for double buffering, 300 for triple buffering, etc.).
-
-To avoid screen tearing, set the `FRONTBUFFER_LOCKING` environment variable to 1.
-This environment variable is used only by the Mali fbdev blob.
